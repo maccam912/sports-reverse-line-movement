@@ -1,0 +1,12 @@
+<% if @RLMindex.length > 0 %>
+<table><tr><th>Date</th><th>Time (ET)</th><th>Teams</th><th>Bet Volume</th><th>Percent for Home Underdog</th><th>Spread for Home Underdog</th><th>Team to bet on</th></tr>
+<% @RLMindex.each do |i| %>
+	<tr><td><%=@dates[i]%></td><td><%= @times[i]%></td><td><%= raw "#{@awayteams[i]} at #{@hometeams[i]}" %></td><td><%=@totalbets[i]%></td><td><%=@awaypercent[i]%></td><td><%=@homespread[i]%></td><td><%=@hometeams[i]%></td></tr>
+<% end %>
+<% end %>
+</table>
+<% if @RLMindex.length == 0 %>
+	<%= raw "No games match your criteria." %><br>
+<% end %>
+<br>
+Data from <%= link_to @site, @site %>
