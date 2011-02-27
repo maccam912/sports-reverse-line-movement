@@ -24,7 +24,7 @@ class LinesController < ApplicationController
     @homespread = get_home_spreads(@doc)
     @dates     = get_dates(@doc)
     @totalbets = get_game_total_bets(@doc)
-    @awaypercent = get_away_bet_percentage(@doc)
+    @homepercent = get_home_bet_percentage(@doc)
     @times = get_times(@doc)
     
     #md5
@@ -35,19 +35,20 @@ class LinesController < ApplicationController
     
     #put MD5 and spread in table
     @RLMindex = Array.new
+    @existarray = Array.new
     @MD5.length.times do |i|
-      exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
-
+      @exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
       
-      if exist != nil
-        if (exist.spread.to_f < @homespread[i]) && (@awaypercent[index] < @percentThreshhold && @totalbets[index] > @betThreashhold && @homespread[index] < 0)
-          @RLMindex << i 
+      if @exist != nil
+        if (@exist.spread.to_f < @homespread[i] && @homepercent[i] < @percentThreshhold && @totalbets[i] > @betThreashhold && @homespread[i] < 0)
+          @RLMindex << i
+          @existarray << @exist.spread
         end
       elsif @homespread[i] != 0
         Rlm.create(:md5 => @MD5[i], :spread => @homespread[i])
       end
     end
-    
+    @count = 0
   end
   
 end
@@ -120,7 +121,7 @@ def get_home_spreads(doc)
   return array
 end
 
-def get_away_bet_percentage(doc)
+def get_home_bet_percentage(doc)
   array = Array.new
   doc.search('//td/span').each do |team|
     team = team.inner_html
