@@ -27,21 +27,19 @@ class LinesController < ApplicationController
     @awaypercent = get_away_bet_percentage(@doc)
     @times = get_times(@doc)
     
-    #use info to pick teams
+    #md5
     @MD5 = Array.new
-    #@indexes = Array.new
-    @awayteams.length.times do |index|
-      @MD5 << Digest::MD5.hexdigest("#{@awayteams[index]}+#{@dates[index]}")
-    #  if (@awaypercent[index] < @percentThreshhold && @totalbets[index] > @betThreashhold && @homespread[index] < 0)
-    #    @indexes << index
-    #  end
+    @hometeams.length.times do |index|
+      @MD5 << md5_string("#{@hometeams[index]}+#{@dates[index]}+#{@selected}")
     end
     
     #put MD5 and spread in table
     @RLMindex = Array.new
     @MD5.length.times do |i|
       exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
-      if exist
+
+      
+      if exist != nil
         if (exist.spread.to_f < @homespread[i]) && (@awaypercent[index] < @percentThreshhold && @totalbets[index] > @betThreashhold && @homespread[index] < 0)
           @RLMindex << i 
         end
@@ -148,4 +146,9 @@ def get_times(doc)
     end
   end
   return array
+end
+
+def md5_string(string)
+  md5 = Digest::MD5.hexdigest(string)
+  return md5
 end
