@@ -40,11 +40,11 @@ class LinesController < ApplicationController
       @exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
       
       if @exist != nil
-        if (@exist.spread.to_f <= @homespread[i] && @homepercent[i] < @percentThreshhold && @totalbets[i] > 1000 && @homespread[i] > 0)
+        if (@exist.spread.to_f <= @homespread[i] && @homepercent[i] < @percentThreshhold && @totalbets[i] > @betThreshhold && @homespread[i] > 0)
           @RLMindex << i
           @existarray << @exist.spread
         end
-      elsif (@homespread[i] != 0 && @totalbets[i] > @betThreshhold)
+      elsif (@homespread[i] != 0 && @totalbets[i] > 1000)
         Rlm.create(:md5 => @MD5[i], :spread => @homespread[i])
       end
     end
