@@ -44,7 +44,7 @@ class LinesController < ApplicationController
           @RLMindex << i
           @existarray << @exist.spread
         end
-      elsif @homespread[i] != 0
+      elsif (@homespread[i] != 0 && @totalbets[i] > @betThreshhold)
         Rlm.create(:md5 => @MD5[i], :spread => @homespread[i])
       end
     end
