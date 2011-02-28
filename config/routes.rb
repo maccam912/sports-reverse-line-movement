@@ -4,6 +4,7 @@ Sports::Application.routes.draw do
 
   # Sample of regular route:
   match 'results' => 'lines#results'
+  match 'allupdated' => 'allupdated#index'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:
