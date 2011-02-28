@@ -9,8 +9,8 @@ class LinesController < ApplicationController
   def results
     #Get variables
     @selected = params["Sport"].downcase
-    @betThreashhold = params["Minvol"].to_i
-    @percentThreshhold = params["Maxpercent"].to_f
+    @betthreshold = params["Minvol"].to_i
+    @percentthreshold = params["Maxpercent"].to_f
     
     #download stats
     @site = form_pregame_url(@selected)
@@ -40,7 +40,7 @@ class LinesController < ApplicationController
       @exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
       
       if @exist != nil
-        if (@exist.spread.to_f <= @homespread[i] && @homepercent[i] < @percentThreshhold && @totalbets[i] > @betThreshhold && @homespread[i] > 0)
+        if (@exist.spread.to_f <= @homespread[i] && @homepercent[i] < @percentthreshold && @totalbets[i] > @betthreshold && @homespread[i] > 0)
           @RLMindex << i
           @existarray << @exist.spread
         end
