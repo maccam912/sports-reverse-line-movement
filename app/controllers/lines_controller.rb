@@ -127,7 +127,7 @@ def get_home_bet_percentage(doc)
     team = team.inner_html
     array << team
   end
-  away_percentages = Array.new(array.size / 8){|i| i * 8 + 5}
+  away_percentages = Array.new(array.size / 8){|i| i * 8 + 4}
   array.replace array.values_at(*away_percentages)
   array.map! {|x| x == "<!--0-->" ? "100%" : x}
   array2 = Array.new
