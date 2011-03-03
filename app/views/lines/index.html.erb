@@ -1,6 +1,6 @@
 <%= form_tag results_path, :method => "get" do %>
 Sport:<%= select_tag "Sport", options_for_select(["NFL", "CFB", "NBA", "CBB", "MLB", "NHL"], :multiple => false, :disabled => false) %><br>
 Minimum bet volume to consider game:<%= text_field_tag "Minvol", 1000 %><br>
-Maximum percent betting on the home team (as a decimal):<%= text_field_tag "Maxpercent", 0.30 %><br>
+Maximum percent betting on the home team:<%= text_field_tag "Maxpercent", 30 %><br>
 <%= submit_tag "Submit" %>
 <% end %>

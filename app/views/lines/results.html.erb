@@ -1,8 +1,8 @@
 <h1>Results for <%= @selected.upcase %></h1>
 <% if @RLMindex.length > 0 %>
-<table><tr><th>Date</th><th>Time</th><th>Teams</th><th>Bet Volume</th><th>Percent for Home Underdog</th><th>Original Spread for Home Underdog</th><th>New Spread for Home Underdog</th><th>RLM</th><th>Team to bet on</th></tr>
+<table><tr><th>Date</th><th>Time</th><th>Teams</th><th>Bet Volume</th><th>Percent</th><th>Original Spread</th><th>New Spread</th><th>RLM</th><th>Team to bet on</th><th>CR</th></tr>
 <% @RLMindex.each do |i| %>
-	<tr><td><%=@dates[i]%></td><td><%= @times[i]%></td><td><%= raw "#{@awayteams[i]} at #{@hometeams[i]}" %></td><td><%=@totalbets[i]%></td><td><%=@homepercent[i]%></td><td><%=@existarray[@count]%><td><%=@homespread[i]%></td><td><%= @existarray[@count].to_f - @homespread[i].to_f%></td><td><%=@hometeams[i]%></td></tr>
+	<tr><td><%=@dates[i]%></td><td><%= @times[i]%></td><td><%= raw "#{@awayteams[i]} at #{@hometeams[i]}" %></td><td><%=@totalbets[i]%></td><td><%=raw "#{(@homepercent[i]*100).to_i}%"%></td><td><%=@openinglines[i].abs%><td><%=@homespread[i]%></td><td><%= @openinglines[i].abs.to_f - @homespread[i].to_f%></td><td><%=@hometeams[i]%></td><td><%=@CRarray[@count]%></td></tr>
 <% @count += 1%>
 <% end %>
 <% end %>

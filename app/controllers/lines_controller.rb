@@ -1,3 +1,5 @@
+puts "****************************"
+puts "****************************"
 require 'open-uri'
 require 'digest/md5'
 
@@ -10,7 +12,7 @@ class LinesController < ApplicationController
     #Get variables
     @selected = params["Sport"].downcase
     @betthreshold = params["Minvol"].to_i
-    @percentthreshold = params["Maxpercent"].to_f
+    @percentthreshold = params["Maxpercent"].to_f/100
     
     #download stats
     @site = form_pregame_url(@selected)
@@ -21,6 +23,7 @@ class LinesController < ApplicationController
     @awayrotationnumbers = get_away_rotation_numbers(@doc)
     @hometeams = get_home_teams(@doc)
     @homerotationnumbers = get_home_rotation_numbers(@doc)
+    @openinglines = get_opening_lines(@doc)
     @homespread = get_home_spreads(@doc)
     @dates     = get_dates(@doc)
     @totalbets = get_game_total_bets(@doc)
@@ -36,17 +39,17 @@ class LinesController < ApplicationController
     #put MD5 and spread in table
     @RLMindex = Array.new
     @existarray = Array.new
+    @CRarray = Array.new
     @MD5.length.times do |i|
-      @exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
-      
-      if @exist != nil
-        if ( @homepercent[i] < @percentthreshold && @totalbets[i] > @betthreshold && @homespread[i] > 0)#@exist.spread.to_f >= @homespread[i]
-          @RLMindex << i
-          @existarray << @exist.spread
-        end
-      elsif (@homespread[i] != 0 && @totalbets[i] > 1000)
-        Rlm.create(:md5 => @MD5[i], :spread => @homespread[i])
+      #@exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
+      if ( @homepercent[i] < @percentthreshold && @totalbets[i] > @betthreshold && @homespread[i] > 0)
+        puts "MADE IT!"
+        @RLMindex << i
+        @linemove = (@openinglines[i].abs - @homespread[i])
+        @CRarray << get_cr(@homepercent[i], @totalbets[i], @linemove).to_i
       end
+      #elsif (@homespread[i] != 0 && @totalbets[i] > 1000)
+      #  Rlm.create(:md5 => @MD5[i], :spread => @homespread[i])
     end
     @count = 0
   end
@@ -121,6 +124,18 @@ def get_home_spreads(doc)
   return array
 end
 
+def get_opening_lines(doc)
+  array = Array.new
+  doc.search('[@title="away-opening-line"]').each do |team|
+    team = team.inner_html
+    team.gsub!("&Acirc;&frac12;", ".5")
+    team.gsub!("pk", "0")
+    team.gsub!("Poned", "0")
+    array << team.to_f
+  end
+  return array
+end
+
 def get_home_bet_percentage(doc)
   array = Array.new
   doc.search('//td/span').each do |team|
@@ -152,4 +167,9 @@ end
 def md5_string(string)
   md5 = Digest::MD5.hexdigest(string)
   return md5
+end
+
+def get_cr(percValue, volValue, moveValue, percFactor = 1, decimal_to_percent = 100, fixedPerc = 0.30, fixedVol = 1000, volFactor = 1, moveFactor = 10)
+  @cr = (((fixedPerc - percValue) * percFactor * decimal_to_percent).round + ((volValue / fixedVol) * volFactor) + (moveValue * moveFactor))
+  return @cr
 end
