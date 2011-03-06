@@ -42,6 +42,7 @@ class LinesController < ApplicationController
     @CRarray = Array.new
     @MD5.length.times do |i|
       #@exist = Rlm.find(:first, :conditions => {:md5 => @MD5[i]})
+      puts @homespread[i]
       if ( @homepercent[i] < @percentthreshold && @totalbets[i] > @betthreshold && @homespread[i] > 0)
         puts "MADE IT!"
         @RLMindex << i

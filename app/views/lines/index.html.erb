@@ -1,6 +1,6 @@
 <%= form_tag results_path, :method => "get" do %>
-Sport:<%= select_tag "Sport", options_for_select(["NFL", "CFB", "NBA", "CBB", "MLB", "NHL"], :multiple => false, :disabled => false) %><br>
+Sport: <div class="radiotext">NFL<%= radio_button_tag "Sport", "NFL", :class => "radio"%> CFB<%= radio_button_tag "Sport", "CFB", :class => "radio"%> NBA<%= radio_button_tag "Sport", "NBA", :class => "radio"%> CBB<%= radio_button_tag "Sport", "CBB", :class => "radio"%> MLB<%= radio_button_tag "Sport", "MLB", :class => "radio"%> NHL<%= radio_button_tag "Sport", "NHL", :class => "radio"%></div><br>
 Minimum bet volume to consider game:<%= text_field_tag "Minvol", 1000 %><br>
 Maximum percent betting on the home team:<%= text_field_tag "Maxpercent", 30 %><br>
-<%= submit_tag "Submit" %>
+<%= submit_tag "Submit", :class => "center" %>
 <% end %>
